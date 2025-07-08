@@ -3,6 +3,7 @@ package com.example.taskmanagerapi.controller
 import com.example.taskmanagerapi.models.ApiResponse
 import com.example.taskmanagerapi.models.TaskDTO
 import com.example.taskmanagerapi.service.TaskService
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/api/v1/tasks")
 class TaskController (
     private val taskService: TaskService,

@@ -3,7 +3,8 @@ package com.example.taskmanagerapi.models
 data class UsersDTO(
     val id: Long = 0,
     val email: String,
-    val role: String = "USER"
+    val role: String = "USER",
+    var token: String? = null
 )
 
 data class UsersLoginDTO(

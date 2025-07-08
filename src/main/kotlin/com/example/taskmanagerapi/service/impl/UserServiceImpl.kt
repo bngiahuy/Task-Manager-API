@@ -3,6 +3,7 @@ package com.example.taskmanagerapi.service.impl
 import com.example.taskmanagerapi.entity.Users
 import com.example.taskmanagerapi.models.UsersDTO
 import com.example.taskmanagerapi.repository.UserRepository
+import com.example.taskmanagerapi.service.JwtService
 import com.example.taskmanagerapi.service.UserService
 import org.springframework.security.crypto.bcrypt.BCrypt
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service
 class UserServiceImpl (
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val jwtService: JwtService
 ) : UserService {
     companion object {
         private val logger = org.slf4j.LoggerFactory.getLogger(UserServiceImpl::class.java)
@@ -45,9 +47,15 @@ class UserServiceImpl (
             if (!passwordEncoder.matches(password, user.passwordHash)) {
                 throw IllegalArgumentException("Invalid password for user with email $email")
             }
+            // Generate JWT token
+            val token = jwtService.generateToken(user)
+            val result = user.toDto()
+            result.token = token
             logger.info("User logged in successfully with email: $email")
-            return user.toDto()
+
+            return result
         } catch (e: Exception) {
+            logger.error("Error logging in user with email $email: ${e.message}", e)
             throw RuntimeException("Error logging in user: ${e.message}", e)
         }
     }

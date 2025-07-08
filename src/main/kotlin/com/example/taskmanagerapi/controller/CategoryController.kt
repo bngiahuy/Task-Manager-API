@@ -5,9 +5,11 @@ import com.example.taskmanagerapi.models.CategoryDTO
 import com.example.taskmanagerapi.service.CategoryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 
 @RestController
 @RequestMapping("/api/v1/categories")
+@SecurityRequirement(name = "bearerAuth")
 class CategoryController (
     private val categoryService: CategoryService
 ) {

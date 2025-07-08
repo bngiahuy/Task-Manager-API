@@ -12,7 +12,9 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
-class SecurityConfig {
+class SecurityConfig (
+    private val jwtAuthenticationFilter: JWTAuthenticationFilter,
+){
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
@@ -22,7 +24,6 @@ class SecurityConfig {
     fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
         return config.authenticationManager
     }
-
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -40,12 +41,12 @@ class SecurityConfig {
                         "/api-docs/**",
                         "/api/v1/users/login",
                         "/api/v1/users/register",
-                        "/api/v1/**"
+//                        "/api/v1/**"
                     ).permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-//            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
